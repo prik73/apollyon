@@ -156,7 +156,7 @@ export default function SpecSheet() {
         <WithImg src="/assets/bmw-i3.jpg" alt="BMW i3 battery" caption="BMW i3 42 kWh pack (salvage)">
           <SheetTable
             rows={[
-              ['Packs', '2× BMW i3 42 kWh (salvage)'],
+              ['Packs', '2× BMW i3 42 kWh'],
               ['Total energy', '75.8 kWh usable'],
               ['Voltage', '352 V'],
               ['Weight', '556 kg (278 kg each)'],
@@ -164,7 +164,6 @@ export default function SpecSheet() {
               ['Cell type', 'Samsung SDI NMC622, 96S1P'],
             ]}
           />
-          <Note color="#b45309">NMC: thermal runaway risk in sealed hull. BMS must cut on any thermal event.</Note>
         </WithImg>
 
         <div style={{ marginTop: 12 }}>
