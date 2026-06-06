@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apollyon Dynamics</title>
+  <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+  <script src="https://unpkg.com/@knadh/oat/oat.min.js" defer></script>
+  <style>
+    body { max-width: 780px; margin: 0 auto; padding: 1rem; }
+    .section { margin-bottom: 2rem; }
+    .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.45; margin-bottom: 0.2rem; }
+    .chosen { font-weight: 600; }
+    .why-not { opacity: 0.5; font-size: 0.88rem; margin-top: 0.2rem; }
+    hr { margin: 1.5rem 0; opacity: 0.12; }
+    code { font-size: 0.85rem; }
+    .calc { background: #f7f6f3; border-left: 2px solid #d0cfc9; padding: 0.6rem 0.9rem; margin: 0.6rem 0; font-size: 0.88rem; font-family: monospace; white-space: pre-wrap; }
+    .warn { color: #b45309; font-size: 0.875rem; }
+    .ok { color: #166534; font-size: 0.875rem; }
+    h1 { font-size: 1.25rem; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Apollyon Dynamics</h1>
+
+  <img src="" alt="Hydrofoil hull" id="hydrofoil-hero" style="max-width:100%; display:block; margin-bottom:1.5rem;">
+
+  <hr>
+
+
+  <!-- MOTORS -->
+  <div class="section" id="motors">
+    <p class="label">Motors</p>
+    <p class="chosen">2x Torqeedo Deep Blue 50R</p>
+    <p>One motor per hull pontoon, stern mount. Standard twin-outboard catamaran configuration.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Continuous output (per motor)</td><td>48.5 kW</td></tr>
+        <tr><td>Peak output (per motor)</td><td>55 kW</td></tr>
+        <tr><td>Total continuous (2 motors)</td><td>97 kW</td></tr>
+        <tr><td>Nominal voltage</td><td>350-400 V</td></tr>
+        <tr><td>Max shaft RPM</td><td>2,440 RPM</td></tr>
+        <tr><td>Weight per motor</td><td>139 kg</td></tr>
+        <tr><td>Weight both motors</td><td>278 kg</td></tr>
+        <tr><td>Integrated controller</td><td>Yes, SMU (System Management Unit)</td></tr>
+        <tr><td>ArduPilot support</td><td>TorqLink CAN, Rover 4.7+ native</td></tr>
+      </tbody>
+    </table>
+
+    <p class="why-not">Why not EMRAX 228 (12.9 kg, 75 kW): requires custom waterjet integration, months of mechanical engineering. Deep Blue is bolt-on, proven, ArduPilot native. Better for first prototype.</p>
+    <p class="why-not">Why not BRUSA HSM1 (73 kg, 128 kW): needs CAN bridge to ArduPilot, 400V battery, no marine integration. Over-engineered for this vessel class.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- ESC -->
+  <div class="section" id="esc">
+    <p class="label">ESC</p>
+    <p class="chosen">None required.</p>
+    <p>The Deep Blue 50R has an integrated SMU (System Management Unit) that acts as the motor controller. It handles everything an ESC would: converting battery DC to motor AC, managing throttle, reporting faults. No external ESC is needed.</p>
+    <p class="ok">Removes one component entirely. Simplifies wiring.</p>
+    <p class="why-not">APD 200F3[X] v2 (previously in BOM) is rated for 60V max. Deep Blue runs at 350V. Connecting them would destroy the APD instantly. Removed.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- BATTERY -->
+  <div class="section" id="battery">
+    <p class="label">Battery</p>
+    <p class="chosen">2x BMW i3 42kWh battery pack (salvage)</p>
+    <p>Torqeedo's official Deep Blue battery system uses BMW i3 cells at 352V. Second-hand BMW i3 packs connect directly to the Deep Blue 50R without modification. Confirmed match.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Per pack</th><th>2 packs (parallel)</th></tr></thead>
+      <tbody>
+        <tr><td>Total capacity</td><td>42.2 kWh</td><td>84.4 kWh</td></tr>
+        <tr><td>Usable capacity</td><td>37.9 kWh</td><td>75.8 kWh</td></tr>
+        <tr><td>Nominal voltage</td><td>352 V</td><td>352 V (parallel = same)</td></tr>
+        <tr><td>Weight</td><td>278 kg</td><td>556 kg</td></tr>
+        <tr><td>Cell type</td><td colspan="2">Samsung SDI 120Ah NMC622 prismatic, 96S1P</td></tr>
+        <tr><td>Energy density</td><td colspan="2">152 Wh/kg</td></tr>
+        <tr><td>BMS</td><td colspan="2">SimpBMS board (~EUR 150), translates BMW CAN to standard</td></tr>
+      </tbody>
+    </table>
+
+    <p class="warn">NMC chemistry: voltage slopes during discharge (not flat like LiFePO4). Motor controller compensates. Fire risk in sealed hull. SimpBMS must cut power on thermal event.</p>
+    <p class="why-not">4x BMW i3 evaluated and rejected: total AUW reaches 1,535 kg, vessel cannot plane (63 W/kg below planing threshold of 100+ W/kg), range at speed actually worsens due to weight increase.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- HULL -->
+  <div class="section" id="hull">
+    <p class="label">Hull</p>
+    <p class="chosen">Planing catamaran, hydrofoil-capable design</p>
+    <p>Twin-pontoon GRP or carbon fibre catamaran. Two hulls provide stability, separate battery compartments per pontoon, and mounting surface for one Deep Blue 50R per hull stern.</p>
+
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Hull type</td><td>Planing catamaran</td></tr>
+        <tr><td>Target LOA</td><td>5-6 m</td></tr>
+        <tr><td>Hull weight</td><td>40-50 kg (GRP or carbon)</td></tr>
+        <tr><td>Payload capacity</td><td>50-100 kg</td></tr>
+        <tr><td>Steering</td><td>Rudder (one per hull, servo-actuated), not differential thrust</td></tr>
+      </tbody>
+    </table>
+
+    <p class="why-not">Why rudder and not differential thrust: differential thrust reduces speed when turning, one motor slows to steer. Rudder keeps both motors at full power and deflects water flow for direction change. Critical for a speed-sensitive mission.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- HYDROFOIL -->
+  <div class="section" id="hydrofoil">
+    <p class="label">Why Hydrofoil</p>
+    <p class="chosen">Hydrofoil is required to hit 100 km range at 35-50 km/h. Conventional hull cannot do both simultaneously.</p>
+
+    <p>A hydrofoil is an underwater wing attached to struts below the hull. As the boat speeds up, the wing generates lift. Above roughly 25 km/h the hull lifts completely out of the water. Only the thin struts remain submerged. Drag drops by approximately 80%.</p>
+
+    <p><strong>Without hydrofoil (conventional planing hull):</strong></p>
+    <div class="calc">Energy consumption from Torqeedo official data:
+  At 10 km/h (1/4 power, one motor, one i3 pack): 80 km range = 0.47 kWh/km
+
+  Scaled for 2 motors + 2 packs (~1,000 kg vessel):
+  At 10 km/h  -> 160 km   (but takes 16 hours)
+  At 20 km/h  -> 40 km
+  At 35 km/h  -> 18 km
+  At 42 km/h  -> 9 km     <- full speed, mission fails</div>
+
+    <p><strong>With hydrofoil (80% drag reduction):</strong></p>
+    <div class="calc">Reference: Candela C-7 (1,100 kg, 40 kWh usable, 92 km at 41 km/h on hydrofoils)
+  Energy per km: 40 / 92 = 0.435 kWh/km at 41 km/h
+
+  Scaled for our vessel (750 kg foiling, 75.8 kWh usable):
+  At 45 km/h  -> ~115 km   [ok]
+  At 50 km/h  -> ~95 km    [borderline]
+
+  Sprint phase check (final 25 km at 65 km/h):
+  Remaining after 75 km cruise: ~28 kWh
+  Power at sprint: ~1.4 kWh/km -> 28 / 1.4 = 20 km
+  Slightly short -> reduce cruise speed to 42 km/h to save 8 kWh for sprint</div>
+
+    <p class="warn">Hydrofoil + Deep Blue 50R integration challenge: when hull lifts 40-60 cm on foils, outboard leg must remain submerged. Deep Blue 50R long shaft = 63.5 cm. Foil height and motor mounting must be engineered to keep propeller submerged during foil flight. Not plug-and-play.</p>
+
+    <p class="why-not">Candela C-8 reference: 1,300 kg, 75 kW motor, 69 kWh, 105 km at 41 km/h. Proves 100+ km at 40+ km/h is achievable with hydrofoil on comparable weight class.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- RUDDER SERVO -->
+  <div class="section" id="rudder">
+    <p class="label">Rudder / Steering Servo</p>
+    <p class="chosen">Volz DA-26-SUB</p>
+    <p>One per hull (twin rudder configuration). Both rudders linked via tiller bar, driven by one servo output from the Cube Orange+.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>IP rating</td><td>IP68, submersible</td></tr>
+        <tr><td>Peak torque</td><td>5.0 Nm</td></tr>
+        <tr><td>Voltage range</td><td>12-32 V (direct from 12V rail)</td></tr>
+        <tr><td>Interface</td><td>PWM + RS-485 telemetry</td></tr>
+        <tr><td>Motor type</td><td>Brushless, contactless hall-effect position sensing</td></tr>
+        <tr><td>Origin</td><td>Germany</td></tr>
+      </tbody>
+    </table>
+
+    <p class="ok">PWM signal: direct connection to Cube Orange+ servo output. No additional hardware.</p>
+    <p class="why-not">Savox SB-2290SG (IP67, $149) evaluated, marginal at 1,000 kg vessel in rough water. Volz is correct spec for this weight class.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- FLIGHT CONTROLLER -->
+  <div class="section" id="fc">
+    <p class="label">Flight Controller / Autopilot</p>
+    <p class="chosen">CubePilot Cube Orange+</p>
+    <p>Running ArduRover 4.7+ firmware. Native TorqLink CAN support for Torqeedo Deep Blue motors. No custom integration code required.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Processor</td><td>STM32H743, 480 MHz</td></tr>
+        <tr><td>IMUs</td><td>Triple redundant</td></tr>
+        <tr><td>Motor protocol</td><td>TorqLink CAN (J1939) to Deep Blue 50R</td></tr>
+        <tr><td>Steering output</td><td>PWM servo channel to Volz DA-26-SUB</td></tr>
+        <tr><td>Origin</td><td>HK</td></tr>
+        <tr><td>Price</td><td>~$404</td></tr>
+      </tbody>
+    </table>
+
+    <p class="ok">ArduRover Torqeedo driver: <code>torqeedo-torqlink.lua</code> in official ArduPilot codebase. Rover 4.7+. CAN bus directly between Cube and Deep Blue SMU.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- GNSS -->
+  <div class="section" id="gnss">
+    <p class="label">GNSS / Positioning</p>
+    <p class="chosen">Septentrio mosaic-go H</p>
+    <p>Complete sealed unit with dual SMA antenna ports. One module provides both centimetre-accurate position and heading from two antennas. No compass used. Compass is unreliable near electric motors.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Heading accuracy</td><td>+/- 0.1 deg</td></tr>
+        <tr><td>Position accuracy</td><td>RTK +/- 2 cm</td></tr>
+        <tr><td>Frequency bands</td><td>Triple-band L1/L2/L5</td></tr>
+        <tr><td>Anti-jamming</td><td>AIM+ (Septentrio proprietary)</td></tr>
+        <tr><td>IP rating</td><td>IP67</td></tr>
+        <tr><td>Price</td><td>~EUR 745 (eval kit)</td></tr>
+        <tr><td>Origin</td><td>Belgium</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+
+  <!-- COMMS -->
+  <div class="section" id="comms">
+    <p class="label">Communications</p>
+    <p class="chosen">Starlink Mini (primary) + Holybro P900 (terminal backup)</p>
+
+    <p><strong>Starlink Mini</strong> is the primary link for all video, telemetry, and control commands.</p>
+    <div class="calc">Why Starlink and not RF (P900 / Walksnail):
+  Radio horizon at 1m antenna height = 3.57 x sqrt(1) = 3.6 km
+  Combined horizon (boat + ground station at 2m) = ~8-10 km
+
+  At sea surface: max range is ~8-10 km regardless of frequency or brand
+
+  Mission range = 100 km -> RF fails after first 10 km
+  Starlink = satellite at 550 km altitude -> no horizon problem</div>
+
+    <table>
+      <thead><tr><th>Component</th><th>Role</th><th>Range</th></tr></thead>
+      <tbody>
+        <tr><td>Starlink Mini</td><td>Primary: video + MAVLink + RC over internet</td><td>Unlimited</td></tr>
+        <tr><td>Holybro P900</td><td>RF backup telemetry, terminal approach only</td><td>~8-10 km surface</td></tr>
+      </tbody>
+    </table>
+
+    <p class="warn">Starlink can be jammed near defended targets. P900 serves as backup for the final 8-10 km if satellite is disrupted. ArduPilot continues autonomously on GPS if both are jammed.</p>
+    <p><strong>Starlink Mini specs:</strong> $199 hardware, 25-40W power draw, 20-40ms latency, 80-150 Mbps, 12V DC.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- CAMERAS -->
+  <div class="section" id="camera">
+    <p class="label">Cameras</p>
+    <p class="chosen">SIYI A8 Mini (PTZ observation) + RunCam Night Eagle 3 (forward FPV)</p>
+    <p>No VTX required. Video streams over Starlink via Raspberry Pi CM5. WebRTC protocol, ~100-150 ms end-to-end latency, acceptable for boat FPV at 30-50 km/h.</p>
+
+    <table>
+      <thead><tr><th>Camera</th><th>Role</th><th>Key spec</th><th>Price</th></tr></thead>
+      <tbody>
+        <tr><td>SIYI A8 Mini</td><td>PTZ zoom / observation</td><td>4K, 8x zoom, 3-axis gimbal, IP67, RTSP Ethernet</td><td>$350-420</td></tr>
+        <tr><td>RunCam Night Eagle 3</td><td>Forward FPV nav camera</td><td>Sony IMX462, 0.00001 lux, usable in near-total darkness</td><td>$70</td></tr>
+      </tbody>
+    </table>
+
+    <p class="why-not">Walksnail Avatar HD Mini removed: 5.8 GHz range over water surface = 1-3 km. Useless for 100 km mission. RunCam (analog) was also incompatible with Walksnail (digital).</p>
+    <p class="why-not">SIYI MK15 + ZT30 ($2,900) removed: destroyed on kamikaze impact, RF range only 5-8 km surface-to-surface. Replaced by A8 Mini at $400.</p>
+  </div>
+
+  <hr>
+
+
+  <!-- COMPANION COMPUTER -->
+  <div class="section" id="companion">
+    <p class="label">Companion Computer</p>
+    <p class="chosen">Raspberry Pi CM5 (8GB / 32GB eMMC)</p>
+    <p>Runs MAVProxy (links autopilot to Starlink ground connection), encodes camera feeds via GStreamer/WebRTC, streams over Starlink. Bridge between Cube Orange+ and internet.</p>
+
+    <table>
+      <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Price</td><td>~$120-130</td></tr>
+        <tr><td>Origin</td><td>UK</td></tr>
+        <tr><td>MAVProxy</td><td>Software that connects autopilot to ground station over any IP link</td></tr>
+        <tr><td>Video encoding</td><td>GStreamer pipeline, WebRTC output, ~100-150 ms latency</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+
+  <!-- WEIGHT AND RANGE SUMMARY -->
+  <div class="section" id="weight">
+    <p class="label">Weight and Range</p>
+
+    <table>
+      <thead><tr><th>Component</th><th>Weight</th></tr></thead>
+      <tbody>
+        <tr><td>2x Torqeedo Deep Blue 50R</td><td>278 kg</td></tr>
+        <tr><td>2x BMW i3 42kWh battery</td><td>556 kg</td></tr>
+        <tr><td>Hull (catamaran GRP/carbon)</td><td>45 kg</td></tr>
+        <tr><td>Electronics (Cube, RPi, Starlink, cameras)</td><td>15 kg</td></tr>
+        <tr><td>Wiring, BMS, connectors</td><td>10 kg</td></tr>
+        <tr><td>Rudder servos x2</td><td>2 kg</td></tr>
+        <tr><td>Payload</td><td>50-100 kg</td></tr>
+        <tr><td><strong>Total AUW</strong></td><td><strong>~956-1,006 kg</strong></td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>Range, conventional planing hull (no hydrofoil):</strong></p>
+    <div class="calc">At 42 km/h (full throttle):   ~9-12 km   [FAIL]
+At 25 km/h:                    ~34 km     [FAIL]
+At 10 km/h (displacement):    ~160 km    [ok but 16-hour mission, too slow]</div>
+
+    <p><strong>Range, with hydrofoil:</strong></p>
+    <div class="calc">Candela C-7 reference: 1,100 kg, 40 kWh usable -> 92 km at 41 km/h on foils
+
+  Our vessel scaled (1,000 kg, 75.8 kWh usable):
+  At 45 km/h foiling: ~115 km  [ok]
+  At 50 km/h foiling: ~95 km   [borderline]
+
+  Note: foil + Deep Blue 50R integration requires engineering work
+  Outboard leg must remain submerged when hull lifts on foils.</div>
+
+    <p class="warn">Critical open item: hydrofoil integration with Deep Blue 50R outboard is not plug-and-play. Hull lifting height must be designed so propeller stays submerged. This is the primary engineering challenge for this setup.</p>
+  </div>
+
+</body>
+</html>
