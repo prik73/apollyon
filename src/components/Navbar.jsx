@@ -10,7 +10,6 @@ export default function Navbar({ active, onTab }) {
         <div className="navbar-logo">AD</div>
         <div>
           <div className="navbar-title">Apollyon Dynamics</div>
-          <div className="navbar-subtitle">Autonomous USV Intelligence Platform</div>
         </div>
       </div>
       <div className="navbar-tabs">

@@ -20,32 +20,54 @@
 const BORDER = '1px solid #d0d0d0';
 const FONT = 'Arial, sans-serif';
 
+const RESPONSIVE = `
+  .ss-wrap      { padding: 32px 24px 80px; }
+  .ss-with-img  { display: flex; gap: 20px; align-items: flex-start; }
+  .ss-img-col   { flex-shrink: 0; width: 200px; }
+  .ss-img-col img { width: 200px; height: 160px; }
+  .ss-grid-3    { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+  .ss-grid-2    { display: grid; grid-template-columns: 1fr 1fr;     gap: 12px; margin-bottom: 8px; }
+  .ss-tscroll   { overflow-x: auto; }
+  .ss-tscroll table { min-width: 340px; }
+
+  @media (max-width: 600px) {
+    .ss-wrap      { padding: 20px 14px 60px; }
+    .ss-with-img  { flex-direction: column; }
+    .ss-img-col   { width: 100%; }
+    .ss-img-col img { width: 100% !important; height: 180px !important; }
+    .ss-grid-3    { grid-template-columns: 1fr; }
+    .ss-grid-2    { grid-template-columns: 1fr; }
+  }
+`;
+
 function SheetTable({ rows, cols }) {
   return (
-    <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: FONT, fontSize: 13 }}>
-      {cols && (
-        <thead>
-          <tr>
-            {cols.map(c => (
-              <th key={c} style={{ border: BORDER, padding: '5px 10px', background: '#f2f2f2', fontWeight: 700, textAlign: 'left', fontSize: 12 }}>
-                {c}
-              </th>
-            ))}
-          </tr>
-        </thead>
-      )}
-      <tbody>
-        {rows.map((r, i) => (
-          <tr key={i}>
-            {r.map((cell, j) => (
-              <td key={j} style={{ border: BORDER, padding: '5px 10px', background: j === 0 ? '#f9f9f9' : '#fff', fontWeight: j === 0 ? 600 : 400, whiteSpace: j === 0 ? 'nowrap' : 'normal' }}>
-                {cell}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="ss-tscroll">
+      <table style={{ borderCollapse: 'collapse', width: '100%', fontFamily: FONT, fontSize: 13 }}>
+        {cols && (
+          <thead>
+            <tr>
+              {cols.map(c => (
+                <th key={c} style={{ border: BORDER, padding: '5px 10px', background: '#f2f2f2', fontWeight: 700, textAlign: 'left', fontSize: 12 }}>
+                  {c}
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i}>
+              {r.map((cell, j) => (
+                <td key={j} style={{ border: BORDER, padding: '5px 10px', background: j === 0 ? '#f9f9f9' : '#fff', fontWeight: j === 0 ? 600 : 400, whiteSpace: j === 0 ? 'nowrap' : 'normal' }}>
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -57,13 +79,13 @@ function SectionHeading({ children }) {
   );
 }
 
-function Img({ src, alt, caption, width = '100%', height = 200 }) {
+function Img({ src, alt, caption, height = 200 }) {
   return (
     <div style={{ textAlign: 'center' }}>
       <img
         src={src}
         alt={alt}
-        style={{ width, height, objectFit: 'contain', background: '#fafafa', border: BORDER, display: 'block', margin: '0 auto' }}
+        style={{ width: '100%', height, objectFit: 'contain', background: '#fafafa', border: BORDER, display: 'block', margin: '0 auto' }}
         onError={e => { e.currentTarget.parentElement.style.display = 'none'; }}
       />
       {caption && <div style={{ fontFamily: FONT, fontSize: 11, color: '#888', marginTop: 4 }}>{caption}</div>}
@@ -73,9 +95,9 @@ function Img({ src, alt, caption, width = '100%', height = 200 }) {
 
 function WithImg({ src, alt, caption, children }) {
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-      <div style={{ flexShrink: 0, width: 200 }}>
-        <Img src={src} alt={alt} caption={caption} width={200} height={160} />
+    <div className="ss-with-img">
+      <div className="ss-img-col">
+        <Img src={src} alt={alt} caption={caption} height={160} />
       </div>
       <div style={{ flex: 1 }}>{children}</div>
     </div>
@@ -97,7 +119,8 @@ function Note({ children, color = '#666' }) {
 export default function SpecSheet() {
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px 80px', fontFamily: FONT }}>
+      <style>{RESPONSIVE}</style>
+      <div className="ss-wrap" style={{ maxWidth: 900, margin: '0 auto', fontFamily: FONT }}>
 
         {/* TITLE */}
         <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 2 }}>specsheet USV</div>
@@ -111,7 +134,7 @@ export default function SpecSheet() {
         <SectionHeading>Hull's Design</SectionHeading>
 
         {/* hull + inspiration photos */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 8 }}>
+        <div className="ss-grid-3">
           <Img src="/assets/hydrofoil.jpg"    alt="Hydrofoil"    caption="Hydrofoil" height={180} />
           <Img src="/assets/candela_c8.jpg"   alt="Candela C-8"  caption="Candela C-8 (~$600 to 700k)" height={180} />
           <Img src="/assets/candela_cpod.jpg" alt="Candela C-Pod" caption="Candela C-Pod underwater motor" height={180} />
@@ -146,7 +169,7 @@ export default function SpecSheet() {
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#888', margin: '14px 0 6px' }}>
           Motors considered
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 8 }}>
+        <div className="ss-grid-2">
           <Img src="/assets/emrax-228.jpg"       alt="EMRAX 228"       caption="EMRAX 228, 75 kW, 13 kg (needs custom shaft + gearbox), best power to weight" height={160} />
           <Img src="/assets/epropulsion-x40.jpg" alt="ePropulsion X40" caption="ePropulsion X40 40 kW,  chineese" height={160} />
         </div>
