@@ -1,8 +1,6 @@
 const TABS = [
   { id: 'specsheet', label: 'Spec Sheet' },
-  { id: 'overview', label: 'Overview' },
-  { id: 'competitors', label: 'Competitor Analysis' },
-  { id: 'research', label: 'Research' },
+  { id: 'overview', label: 'Old' },
 ];
 
 export default function Navbar({ active, onTab }) {

@@ -5,6 +5,8 @@
     hydrofoil.jpg       — hydrofoil boat photo
     candela_c8.jpg      — Candela C-8 photo
     candela-cpod.jpg    — Candela C-Pod motor (underwater)
+    emrax-228.jpg       — EMRAX 228 axial flux motor (contender)
+    epropulsion-x40.jpg — ePropulsion X40 outboard (contender)
     torqeedo.jpg        — Torqeedo Deep Blue 50R
     bmw-i3.jpg          — BMW i3 battery pack
     ser203x.jpg         — Blue Trail SER-203X servo
@@ -98,32 +100,30 @@ export default function SpecSheet() {
       <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px 80px', fontFamily: FONT }}>
 
         {/* TITLE */}
-        <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 2 }}>Apollyon Dynamics — USV</div>
-        <div style={{ fontSize: 13, color: '#666', marginBottom: 20 }}>Supply Chain & Spec Sheet · Prototype v1 · June 2026</div>
-
+        <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 2 }}>specsheet USV</div>
         {/* TOP-LEVEL SPECS */}
         <SheetTable
           cols={['Weight (AUW)', 'Speed', 'Range', 'Runtime']}
-          rows={[['800–1100 kg', '40–65 km/h', '~120 km', '2.52 hrs  (75.8 kWh ÷ 30 kW)']]}
+          rows={[['800 to 1100 kg', '40 to 65 km/h', '~120 km', '2.52 hrs  (75.8 kWh ÷ 30 kW)']]}
         />
 
         {/* ── HULL ── */}
         <SectionHeading>Hull's Design</SectionHeading>
 
-        {/* three hull photos */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
-          <Img src="/assets/hydrofoil.jpg"    alt="Hydrofoil"    caption="Hydrofoil — hull lifted above water" height={180} />
-          <Img src="/assets/candela_c8.jpg"   alt="Candela C-8"  caption="Candela C-8 (inspired from, ~$600–700k)" height={180} />
+        {/* hull + inspiration photos */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 8 }}>
+          <Img src="/assets/hydrofoil.jpg"    alt="Hydrofoil"    caption="Hydrofoil" height={180} />
+          <Img src="/assets/candela_c8.jpg"   alt="Candela C-8"  caption="Candela C-8 (~$600 to 700k)" height={180} />
           <Img src="/assets/candela_cpod.jpg" alt="Candela C-Pod" caption="Candela C-Pod underwater motor" height={180} />
         </div>
 
         <SheetTable
           rows={[
             ['Hull type', 'Hydrofoil catamaran'],
-            ['Length', '3.5 – 5 metres'],
+            ['Length', '3.5 to 5 metres'],
             ['Material', 'GRP or carbon fibre'],
             ['Inspired by', 'Candela C-8 (Swedish)'],
-            ['Hull weight', '~40–50 kg'],
+            ['Hull weight', '~40 to 50 kg'],
             ['Foil effect', 'Lifts hull above water above ~25 km/h → ~80% drag reduction'],
           ]}
         />
@@ -135,13 +135,21 @@ export default function SpecSheet() {
             rows={[
               ['Motors', '2× Torqeedo Deep Blue 50R'],
               ['Power', '97 kW continuous / 110 kW peak (combined)'],
-              ['Voltage', '350–400 V'],
+              ['Voltage', '350 to 400 V'],
               ['Weight', '278 kg (139 kg each)'],
-              ['Controller', 'Integrated SMU — no external ESC'],
+              ['Controller', 'Integrated SMU no external ESC'],
               ['ArduPilot', 'TorqLink CAN, ArduRover 4.7+ native'],
             ]}
           />
         </WithImg>
+
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#888', margin: '14px 0 6px' }}>
+          Motors considered
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 8 }}>
+          <Img src="/assets/emrax-228.jpg"       alt="EMRAX 228"       caption="EMRAX 228, 75 kW, 13 kg (needs custom shaft + gearbox), best power to weight" height={160} />
+          <Img src="/assets/epropulsion-x40.jpg" alt="ePropulsion X40" caption="ePropulsion X40 40 kW,  chineese" height={160} />
+        </div>
 
         {/* ── BATTERY ── */}
         <SectionHeading>Battery</SectionHeading>
